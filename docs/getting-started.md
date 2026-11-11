@@ -2,11 +2,16 @@
 
 Prepare your environment before starting the labs. This takes about 15–20 minutes.
 
+**Your journey:** Clone Repository → Choose Provider → Configure Credentials → Test Connection → Start Lab 1.
+
+!!! tip "Choose your AI provider"
+    The workshop works with Gemini, OpenAI, Anthropic Claude, OpenAI-compatible APIs, and local Ollama models. Gemini is the default and the only provider verified end to end. See [Model Providers](providers/index.md) to pick one.
+
 ## 1. Workshop prerequisites
 
 - Working knowledge of Java and object-oriented design
 - Basic familiarity with Maven and Git
-- A Google account to obtain a Gemini API key
+- API access to one supported AI provider, or a local Ollama model (Gemini is the default; a Google account is enough to get a key)
 - A stable internet connection
 
 ## 2. Required software
@@ -17,7 +22,7 @@ Prepare your environment before starting the labs. This takes about 15–20 minu
 | Apache Maven | Build and dependency management |
 | IntelliJ IDEA (or another Java IDE) | Development environment |
 | Git | Clone the repository |
-| Google Gemini API | The LLM provider used by the labs |
+| An AI provider | Google Gemini (default), OpenAI, Anthropic, an OpenAI-compatible API, or Ollama. See [Model Providers](providers/index.md). |
 
 The labs use **LangChain4j** and **CDI**; their dependencies are managed by Maven and require no separate installation.
 
@@ -35,49 +40,108 @@ mvn clean install
 2. Let the IDE import the Maven project once the Java build is available.
 3. Configure the project SDK to your installed JDK.
 
-## 5. Obtain a Gemini API key
+## 5. Choose a provider
 
-1. Open [Google AI Studio](https://aistudio.google.com/api-keys).
-2. Sign in with your Google account.
-3. Create an API key and copy it.
+Read the [Model Providers overview](providers/index.md) and pick one guide: [Gemini](providers/gemini.md) (default), [OpenAI](providers/openai.md), [Anthropic Claude](providers/anthropic.md), [OpenAI-compatible APIs](providers/openai-compatible.md), or [Ollama](providers/ollama.md). To stay with Gemini, create a key in [Google AI Studio](https://aistudio.google.com/api-keys).
 
-Eligible participants can use Gemini's free API tier without a credit card, subject to provider availability and rate limits.
+A subscription to a chat product does not give you API access. Verify API access, credits, and model capabilities first.
 
-!!! warning "Never commit credentials"
-    Do not place your API key in source files, configuration committed to Git, or screenshots. Keep it in the git-ignored `.env` file or in environment variables.
+The lab code does not change with the provider. Only configuration does.
 
-## 6. Configure the API key
+## 6. Configure credentials
 
-Copy the template and set your key in the local `.env` file at the repository root. It is ignored by Git.
+Copy the template and fill in the variables for your provider in the local `.env` file at the repository root. It is ignored by Git.
 
 ```bash
 cp .env.example .env
-# edit .env:
+# Gemini (default):
 # GEMINI_API_KEY=your-gemini-api-key
+# Another provider: also set WORKSHOP_AI_PROVIDER, for example
+# WORKSHOP_AI_PROVIDER=openai
+# OPENAI_API_KEY=...   OPENAI_MODEL=...
 ```
 
-SmallRye Config reads `.env` from the working directory, so start the application from the repository root. A real `GEMINI_API_KEY` environment variable, if set, takes precedence over the file.
+!!! warning "Never commit credentials"
+    Do not place API keys in source files, committed configuration, or screenshots. Keep them in the git-ignored `.env` file or in environment variables.
 
-## 7. Verify the environment
+`workshop.ai.provider` (default `gemini`) selects which file in `config/providers/` is loaded. SmallRye Config reads `.env` from the working directory, so start the application from the repository root. A real environment variable takes precedence over the file.
 
-Check the installed tools:
+## 7. Test the connection
+
+Check the installed tools and build:
 
 ```bash
 java -version
 mvn -version
 git --version
-```
-
-Build the project:
-
-```bash
 mvn clean verify
 ```
 
-Run **Lab 0**, a configuration check, from IntelliJ IDEA: open `os.expert.lab0.App` and run its `main` method (working directory: the repository root). It starts Weld SE, registers `AssistantService`, and asks Gemini two questions. The first answer should be *Paris*.
+Then run the provider-independent smoke test. From IntelliJ IDEA, run `os.expert.setup.ProviderConnectionCheck` (working directory: the repository root), or:
 
-!!! note
-    Lab 0 uses `gemini-3.5-flash`, configured in `src/main/resources/META-INF/microprofile-config.properties`. If a model returns HTTP 404 or times out, pick another model available to your key.
+```bash
+mvn -q compile exec:java -Dexec.mainClass=os.expert.setup.ProviderConnectionCheck
+```
+
+Expected output with Gemini (the model's reply may vary slightly):
+
+```text
+Provider selected : gemini
+Model class       : dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
+Response          : OK
+SUCCESS: the model is reachable (basic inference only).
+```
+
+`os.expert.setup.ProviderConnectionCheck`:
+
+```java
+package os.expert.setup;
+
+import dev.langchain4j.model.chat.ChatModel;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
+
+public class ProviderConnectionCheck {
+
+    private static final String PREFIX = "dev.langchain4j.cdi.plugin.chat-model.";
+
+    public static void main(String[] args) {
+        Config config = ConfigProvider.getConfig();
+        String provider = config.getOptionalValue("workshop.ai.provider", String.class).orElse("(not set)");
+        System.out.println("Provider selected : " + provider);
+        System.out.println("Model class       : " + config.getOptionalValue(PREFIX + "class", String.class).orElse("(none)"));
+
+        try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
+            Instance<ChatModel> models = container.select(ChatModel.class);
+            if (models.isUnsatisfied()) {
+                System.err.println("FAILED: no ChatModel bean. Check WORKSHOP_AI_PROVIDER, that"
+                        + " config/providers/" + provider + ".properties exists, and that you run from the repository root.");
+                System.exit(1);
+            }
+            String answer = models.get().chat("Reply with the single word: OK");
+            System.out.println("Response          : " + answer);
+            System.out.println("SUCCESS: the model is reachable (basic inference only).");
+        } catch (Exception e) {
+            Throwable root = e;
+            while (root.getCause() != null) {
+                root = root.getCause();
+            }
+            System.err.println("FAILED: " + root.getClass().getSimpleName() + ": " + root.getMessage());
+            System.err.println("Hints: missing API key or model variable, wrong provider name, model not available to your key,"
+                    + " Ollama not running, or a network problem.");
+            System.exit(1);
+        }
+    }
+}
+```
+
+It starts CDI, asks for the one configured `ChatModel`, sends a tiny request, and prints the result without showing any key. A success confirms basic inference only. It does not validate structured output or multi-step tool calling.
+
+!!! note "Lab 0 (Gemini)"
+    `os.expert.lab0.App` is a Gemini-based configuration check and still works with the default provider. Gemini's model name is set in `config/providers/gemini.properties` (`GEMINI_MODEL`). If a model returns HTTP 404 or times out, choose another one available to your key.
 
 ## 8. Troubleshooting
 
@@ -85,11 +149,13 @@ Run **Lab 0**, a configuration check, from IntelliJ IDEA: open `os.expert.lab0.A
 |---|---|
 | `java` or `mvn` not found | Verify installation and that the tools are on your `PATH`. |
 | API key not detected | Check `.env` exists in the repository root and the app is started from that directory. |
-| HTTP 404 for a model | The model is unavailable to your key; change `model-name` in `microprofile-config.properties`. |
+| HTTP 404 for a model | The model is unavailable to your key; change the model variable (for Gemini, `GEMINI_MODEL`). |
 | HTTP 429/503 or request timeout | Rate limit or high demand; retry later or use another model. |
-| Authentication or quota errors | Check the key in Google AI Studio and review rate limits. |
-| Corporate proxy or firewall | Ensure access to Google's API endpoints. |
+| Authentication or quota errors | Check the key and credits with your provider. |
+| `no ChatModel bean` | Check `WORKSHOP_AI_PROVIDER` and that you run from the repository root. |
+| Provider-specific problems | See the troubleshooting section of your [provider guide](providers/index.md). |
+| Corporate proxy or firewall | Ensure access to your provider's API endpoints. |
 
 ## 9. Continue to Lab 1
 
-Once your environment is ready, continue to [Lab 1: Hello World](labs/lab1-hello-world.md), or review the [Labs overview](labs/index.md).
+Once the connection test succeeds, continue to [Lab 1: Hello World](labs/lab1-hello-world.md), or review the [Labs overview](labs/index.md).
