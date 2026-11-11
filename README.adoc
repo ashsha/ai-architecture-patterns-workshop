@@ -63,7 +63,11 @@ NOTE: All five labs are complete tutorials. Lab 5 implements model-directed tool
 
 `os.expert.lab0.App` is a standalone Java SE entry point that verifies the setup end to end: Weld SE starts, LangChain4j CDI registers the declarative `AssistantService`, and Gemini answers two prompts. It has no REST endpoint or web server.
 
-==== Gemini API Key
+==== AI provider and credentials
+
+The workshop supports Gemini (default, the only verified provider), OpenAI, Anthropic Claude, OpenAI-compatible APIs, and Ollama. `workshop.ai.provider` (or `WORKSHOP_AI_PROVIDER`) selects one of the files in `config/providers/`; no Java code changes. See the published *Model Providers* pages for details and the compatibility matrix. Check your setup with `os.expert.setup.ProviderConnectionCheck`.
+
+For Gemini:
 
 . Create a key in https://aistudio.google.com/api-keys[Google AI Studio].
 . Copy the template and edit it. `.env` is ignored by Git; never commit it.
@@ -74,7 +78,7 @@ cp .env.example .env
 # then set GEMINI_API_KEY in .env
 ----
 
-SmallRye Config reads `.env` from the working directory, so run from the repository root. A real `GEMINI_API_KEY` environment variable takes precedence over the file. The model is configured in `microprofile-config.properties` (currently `gemini-3.5-flash`).
+SmallRye Config reads `.env` from the working directory, so run from the repository root. A real `GEMINI_API_KEY` environment variable takes precedence over the file. The model is configured in `microprofile-config.properties` (Gemini model set in `config/providers/gemini.properties`, currently `gemini-3.8-flash`).
 
 ==== Run from IntelliJ IDEA
 
