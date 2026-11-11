@@ -101,7 +101,7 @@ The recommendations can vary between executions, even though the Java workflow f
 
 ## Prerequisites
 
-- Completed [Getting Started](../getting-started.md): Java 21, Maven, IntelliJ IDEA, and a `.env` file containing `GEMINI_API_KEY`
+- Completed [Getting Started](../getting-started.md): Java 21, Maven, IntelliJ IDEA, and a `.env` file configured for your selected AI provider (see [Model Providers](../providers/index.md); Gemini is the default)
 - The repository cloned, with `src/main/java/os/expert/lab1/` ready for your classes (it may contain only `package-info.java`)
 
 ### What is already configured
@@ -109,17 +109,17 @@ The recommendations can vary between executions, even though the Java workflow f
 The Maven project already provides LangChain4j, the Gemini integration, LangChain4j CDI, Weld SE, and SmallRye Config. Two resource files also exist, so you do not create them:
 
 - `src/main/resources/META-INF/beans.xml` enables CDI bean discovery (`annotated` mode).
-- `src/main/resources/META-INF/microprofile-config.properties` configures the Gemini chat model:
+- `src/main/resources/META-INF/microprofile-config.properties` selects the provider (`workshop.ai.provider`, default `gemini`) and loads one file from `config/providers/`. For Gemini, `config/providers/gemini.properties` configures the chat model:
 
 ```properties
 dev.langchain4j.cdi.plugin.chat-model.class=dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
 dev.langchain4j.cdi.plugin.chat-model.config.api-key=${GEMINI_API_KEY}
-dev.langchain4j.cdi.plugin.chat-model.config.model-name=gemini-3.5-flash
+dev.langchain4j.cdi.plugin.chat-model.config.model-name=${GEMINI_MODEL:gemini-3.8-flash}
 ```
 
 (The file may contain a few more settings, such as temperature, retries, and a timeout.) The LangChain4j CDI extension reads these properties and **registers a `ChatModel` bean automatically**. You never write a model producer, and the API key stays outside your Java code: `${GEMINI_API_KEY}` is resolved from the environment or from your local `.env` file.
 
-If the file lists a model that your key cannot use (for example an HTTP 404 response), change `model-name` to one available to you.
+If the file lists a model that your key cannot use (for example an HTTP 404 response), set `GEMINI_MODEL` to one available to you. To use another provider, follow its [Model Providers](../providers/index.md) guide; the Java code in this lab does not change.
 
 ## Step-by-step implementation
 
@@ -352,7 +352,7 @@ This code is the whole workflow, and it is written by you. The model never decid
 ## Run the application
 
 1. Open the project in IntelliJ IDEA and confirm the project SDK is Java 21.
-2. Make sure `.env` exists in the repository root with your `GEMINI_API_KEY` (see [Getting Started](../getting-started.md)). Never commit it.
+2. Make sure `.env` exists in the repository root with the credentials for your selected provider, such as `GEMINI_API_KEY` (see [Getting Started](../getting-started.md)). Never commit it.
 3. Open `BookApp` and click the green run icon next to `main`, or choose **Run → Run 'BookApp.main()'**.
 4. In the run configuration, set the **working directory** to the repository root (`$PROJECT_DIR$`), so `.env` is found.
 5. Read the console output.
