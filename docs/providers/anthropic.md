@@ -1,7 +1,7 @@
 # Anthropic Claude
 
-!!! note "Partially tested"
-    The connection check, [Lab 1](../labs/lab1-hello-world.md) (structured output) and [Lab 5](../labs/lab5-planning.md) (multi-step tool calling) were run against `claude-opus-5-5`, `claude-sonnet-5-5` and `claude-haiku-5-5`, one run each, with LangChain4j 1.22.0. Labs 2 to 4 have not been run with this exact configuration.
+!!! note "Tested"
+    The connection check and Labs 1 to 5 were run against `claude-opus-5-5`, `claude-sonnet-5-5` and `claude-haiku-5-5`, one run per lab and model, with LangChain4j 1.22.0 and the lab code as published in these pages. Model output varies between runs; re-check after changing the model or library version.
 
 ## 1. Why choose this provider?
 
@@ -62,7 +62,6 @@ This confirms basic inference only. See [Getting Started](../getting-started.md#
 
 ## 7. Known limitations
 
-- Labs 2 to 4 not yet tested with this configuration.
 - **Structured output (Labs 1, 4):** no JSON-schema mode is enabled here, so LangChain4j relies on prompt-based JSON. Verify with your model.
 - **Tool calling (Lab 5):** model-dependent; verify the multi-step flow. Gemini's thought-signature properties do not apply to Claude and are not included.
 
