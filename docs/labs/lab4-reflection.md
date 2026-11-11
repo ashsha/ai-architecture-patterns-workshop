@@ -65,7 +65,7 @@ By the end of this lab you will understand:
 ## Prerequisites
 
 - Completed [Lab 3](lab3-rag.md) (or at least [Lab 1](lab1-hello-world.md), whose conventions we reuse)
-- Java 21, Maven, and a working Gemini configuration with `.env` (see [Getting Started](../getting-started.md))
+- Java 21, Maven, and a working provider configuration with `.env` (see [Getting Started](../getting-started.md) and [Model Providers](../providers/index.md); Gemini is the verified default)
 - No additional API key or infrastructure
 
 ## Architecture: The Reflection Feedback Loop
