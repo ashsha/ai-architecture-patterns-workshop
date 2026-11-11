@@ -61,7 +61,7 @@ Previous messages become available to future requests that use the same session 
 ## Prerequisites
 
 - Completed [Lab 1](lab1-hello-world.md)
-- A working `.env` with `GEMINI_API_KEY` and the model configuration from [Getting Started](../getting-started.md)
+- A working `.env` for your selected provider (see [Getting Started](../getting-started.md) and [Model Providers](../providers/index.md))
 - Familiarity with CDI producers and injection
 - The repository cloned, with `src/main/java/os/expert/lab2/` ready for your classes (it may contain only `package-info.java`)
 
@@ -325,7 +325,7 @@ public class AgentApp {
 
 1. Open the Maven project in IntelliJ IDEA.
 2. Verify the project SDK is Java 21.
-3. Make sure `.env` in the repository root contains your `GEMINI_API_KEY` (see [Getting Started](../getting-started.md)). Never commit it.
+3. Make sure `.env` in the repository root contains the credentials for your selected provider (see [Getting Started](../getting-started.md)). Never commit it.
 4. Make sure the model in `microprofile-config.properties` is available to your key. A 404 or timeout means you should pick another model.
 5. Open `AgentApp` and click the green run icon next to `main`, or choose **Run → Run 'AgentApp.main()'**.
 6. In the run configuration, set the working directory to the repository root (`$PROJECT_DIR$`), so `.env` is found.
