@@ -44,7 +44,7 @@ By the end of this lab you will be able to:
 
 ## Prerequisites
 
-- Completed [Lab 2](lab2-memory.md) and a working `.env` setup (see [Getting Started](../getting-started.md))
+- Completed [Lab 2](lab2-memory.md) and a working `.env` setup for your selected provider (see [Getting Started](../getting-started.md) and [Model Providers](../providers/index.md))
 - Nothing else to install: the embedding model runs inside the JVM
 
 ## Architecture: Ingestion and Retrieval
@@ -88,7 +88,7 @@ Key ideas:
 - An **embedding** is a vector of numbers that represents the meaning of a text. Similar texts have nearby vectors.
 - A **segment** is a small chunk of a document. Retrieving chunks keeps the prompt small and focused.
 - The **retriever** embeds the question and returns the closest segments above a minimum score.
-- The **chat model** (Gemini, configured in Getting Started) only writes the answer. The **embedding model** is a separate, local model.
+- The **chat model** (your selected provider; Gemini is the verified default) only writes the answer. The **embedding model** is a separate, local model that does not change when you switch chat provider.
 
 ## Files you will create
 
@@ -406,7 +406,7 @@ Both implement the same architectural pattern.
 
 1. Open the Maven project in IntelliJ IDEA.
 2. Verify the project SDK is **Java 21**.
-3. Verify the Gemini key in `.env` (see [Getting Started](../getting-started.md)).
+3. Verify your provider credentials in `.env` (see [Getting Started](../getting-started.md)).
 4. Create the three Java classes above.
 5. Verify the named retriever: `@Named("hrPolicyRetriever")` on the producer equals `contentRetrieverName` on the agent.
 6. Run `mvn clean verify`.
