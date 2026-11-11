@@ -61,7 +61,7 @@ By the end of this lab you will understand:
 
 ## Prerequisites
 
-- Completed [Lab 4](lab4-reflection.md) and a working `.env` setup (see [Getting Started](../getting-started.md))
+- Completed [Lab 4](lab4-reflection.md) and a working `.env` setup for your selected provider (see [Getting Started](../getting-started.md) and [Model Providers](../providers/index.md))
 - Nothing else to install
 
 ## Architecture: The Tool-Calling Loop
@@ -342,6 +342,9 @@ Keep three responsibilities separate:
 
 ## Runtime compatibility: Gemini thought signatures
 
+!!! note "Gemini only"
+    The two properties below exist only on the Gemini builder and live in `config/providers/gemini.properties`. Do not copy them to other providers. Multi-step tool calling with other providers or models has not been verified; see the [compatibility matrix](../providers/index.md#compatibility-matrix).
+
 Some Gemini models return an opaque **thought signature** with a function call. When you continue the conversation with the tool result, the request must send that signature back. Otherwise Gemini rejects the request:
 
 ```text
@@ -366,7 +369,7 @@ If you see the 400 error, confirm both properties are present, your LangChain4j 
 
 1. Open the Maven project in IntelliJ IDEA.
 2. Verify the project SDK is **Java 21**.
-3. Confirm the Gemini key is configured in `.env` (see [Getting Started](../getting-started.md)).
+3. Confirm your provider credentials are configured in `.env` (see [Getting Started](../getting-started.md)).
 4. Create the three Lab 5 Java classes above.
 5. Run `mvn clean verify`.
 6. Run `os.expert.lab5.AgentMain` with the repository root as working directory.
