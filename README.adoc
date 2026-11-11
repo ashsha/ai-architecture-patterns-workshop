@@ -65,7 +65,7 @@ NOTE: All five labs are complete tutorials. Lab 5 implements model-directed tool
 
 ==== AI provider and credentials
 
-The workshop supports Gemini (default, the only verified provider), OpenAI, Anthropic Claude, OpenAI-compatible APIs, and Ollama. `workshop.ai.provider` (or `WORKSHOP_AI_PROVIDER`) selects one of the files in `config/providers/`; no Java code changes. See the published *Model Providers* pages for details and the compatibility matrix. Check your setup with `os.expert.setup.ProviderConnectionCheck`.
+The workshop supports Gemini (default, the only verified provider), OpenAI, Anthropic Claude, OpenAI-compatible APIs, and Ollama. `workshop.ai.provider` (or `WORKSHOP_AI_PROVIDER`) selects one of the files in `config/providers/`; no Java code changes. See the published *Model Providers* pages for details. Check your setup with `os.expert.setup.ProviderConnectionCheck`.
 
 For Gemini:
 
