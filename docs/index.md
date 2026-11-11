@@ -67,6 +67,7 @@ hide:
 </div>
 
 <div class="os-cta">
-<div class="os-cta-text"><span class="os-meta"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c4 2 6 6 6 10l-3 3h-6l-3-3c0-4 2-8 6-10zM9 15l-3 5 4-2M15 15l3 5-4-2"/><circle cx="12" cy="9" r="1.6"/></svg></span><div><h2>Ready to get started?</h2><p>Set up your environment and obtain your Gemini API key.</p></div></div>
+<div class="os-cta-text"><span class="os-meta"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c4 2 6 6 6 10l-3 3h-6l-3-3c0-4 2-8 6-10zM9 15l-3 5 4-2M15 15l3 5-4-2"/><circle cx="12" cy="9" r="1.6"/></svg></span><div><h2>Ready to get started?</h2><p>Set up your environment and configure your AI provider.</p></div></div>
 <a class="os-button" href="getting-started/">Go to Getting Started <span aria-hidden="true">→</span></a>
 </div>
+<p class="os-provider-note"><strong>Choose Your AI Provider.</strong> Use Gemini, OpenAI, Claude, compatible APIs, or a supported local model. <a href="providers/">See Model Providers →</a></p>
