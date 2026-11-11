@@ -101,24 +101,6 @@ No Java class changes. Run everything from the repository root, because the path
 !!! warning "Provider-specific properties"
     Each file sets only properties its model builder supports. An unknown property makes startup fail. For example, `return-thinking` and `send-thinking` exist only for Gemini, so they live only in `gemini.properties`.
 
-## Compatibility matrix
-
-A provider that answers a simple question may still fail a lab. Status values: **Verified** (run end to end), **Not yet tested**, **Known limitation**.
-
-| Lab | Required capability | Gemini `gemini-3.8-flash` | OpenAI | Anthropic | OpenAI-compatible | Ollama |
-|---|---|---|---|---|---|---|
-| 1 — DAG | Structured Java output | Verified | Not yet tested | Not yet tested | Not yet tested | Not yet tested |
-| 2 — Memory | Multi-turn conversation | Verified | Not yet tested | Not yet tested | Not yet tested | Not yet tested |
-| 3 — RAG | Text generation from retrieved context | Verified | Not yet tested | Not yet tested | Not yet tested | Not yet tested |
-| 4 — Reflection | Structured generation and evaluation | Verified | Not yet tested | Not yet tested | Not yet tested | Not yet tested |
-| 5 — Planning & Tools | Multi-step tool calling | Verified | Not yet tested | Not yet tested | Not yet tested | Not yet tested |
-
-- **Verified** means run with `langchain4j-google-ai-gemini` 1.22.0 (managed by the LangChain4j BOM 1.22.0) and model `gemini-3.8-flash`.
-- For the other providers, the build confirms only that each configuration file creates the expected `ChatModel` class (an offline check with dummy credentials, no network call). That does not show that any lab works.
-- Lab 3's `AllMiniLmL6V2EmbeddingModel` runs locally and is independent of the chat provider.
-
-If you test another provider or model, record the exact model and integration version before claiming it works.
-
 ## Next
 
 - Pick a guide above, then run the [connection test](../getting-started.md#7-test-the-connection).
