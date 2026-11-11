@@ -40,6 +40,13 @@ extra_css:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
+  - Model Providers:
+      - Overview: providers/index.md
+      - Google Gemini: providers/gemini.md
+      - OpenAI: providers/openai.md
+      - Anthropic Claude: providers/anthropic.md
+      - OpenAI-Compatible APIs: providers/openai-compatible.md
+      - Local Models (Ollama): providers/ollama.md
   - Labs:
       - Overview: labs/index.md
       - "Lab 1 — DAG: Book Recommendations": labs/lab1-hello-world.md
