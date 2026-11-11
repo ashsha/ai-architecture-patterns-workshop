@@ -343,7 +343,7 @@ Keep three responsibilities separate:
 ## Runtime compatibility: Gemini thought signatures
 
 !!! note "Gemini only"
-    The two properties below exist only on the Gemini builder and live in `config/providers/gemini.properties`. Do not copy them to other providers. Multi-step tool calling with other providers or models has not been verified; see the [compatibility matrix](../providers/index.md#compatibility-matrix).
+    The two properties below exist only on the Gemini builder and live in `config/providers/gemini.properties`. Do not copy them to other providers. Multi-step tool calling has been verified only with Gemini; check it yourself with any other provider or model.
 
 Some Gemini models return an opaque **thought signature** with a function call. When you continue the conversation with the tool result, the request must send that signature back. Otherwise Gemini rejects the request:
 
